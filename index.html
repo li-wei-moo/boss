@@ -1,23 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>安全提示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        :root {
+            --theme-color: #07c160;
+            --background-color: #f7f7f7;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --sub-text-color: #888;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--background-color);
+        }
+        .container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .shield-icon {
+            width: 50px;
+            height: 50px;
+            color: var(--theme-color);
+            margin-bottom: 15px;
+        }
+        .title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 0 0 10px;
+        }
+        .description {
+            font-size: 0.9em;
+            color: var(--sub-text-color);
+            margin: 0 0 25px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: var(--theme-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #06ad56;
+        }
+    </style>
 </head>
 <body>
+    <div class="container" id="container">
+        <svg class="shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5L12 2zm0 11.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm-1-7.22l-1.41 1.41 2.12 2.12 4.24-4.24-1.41-1.41-2.83 2.83z" fill-opacity="0.2"/>
+            <path d="M11.29 13.71l-2.12-2.12-1.41 1.41L11.29 16.5l5.66-5.66-1.41-1.41z"/>
+        </svg>
+        <h1 class="title">正在进行安全检查</h1>
+        <p class="description">为保障您的访问安全，请点击下方按钮继续。</p>
+        <a id="jump-btn" href="#" class="button">继续访问</a>
+    </div>
+
 <script>
     (function(){
         try {
             const p = new URLSearchParams(window.location.search).get('_');
-            if (p) {
+            const btn = document.getElementById('jump-btn');
+            const container = document.getElementById('container');
+            if (p && btn) {
                 const u = decodeURIComponent(atob(p.replace(/ /g, '+')).split('').map(c=>'%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
                 if (u && (u.startsWith('http') || u.startsWith('//')) && u !== window.location.href) {
-                    setTimeout(function() {
-                        window.location.replace(u);
-                    }, 1500);
+                    btn.href = u;
+                } else {
+                    container.innerHTML = '<p class="description">链接已失效</p>';
                 }
+            } else {
+                 container.innerHTML = '<p class="description">缺少必要参数</p>';
             }
-        } catch(e) {}
+        } catch(e) {
+            document.getElementById('container').innerHTML = '<p class="description">链接格式错误</p>';
+        }
     })();
 </script>
 </body>
